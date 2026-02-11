@@ -4,13 +4,12 @@ import time
 import os
 import numpy as np
 from scipy.spatial.distance import cosine
+from winlocker import winlock
+
 
 known_face = "data/know_face"
 img_from_cam = "my_photo.jpg"
 THRESHOLD = 0.3
-def winlock():
-    import HELLOCKER.lock
-    HELLOCKER.lock
 
 known_embeddings = []
 for file in os.listdir(known_face):
@@ -29,7 +28,7 @@ print(f"загружено {len(known_embeddings)}")
 cap = cv2.VideoCapture(0)
 
 while True:
-    time.sleep(5)
+    time.sleep(10)
     ret, frame = cap.read()
     if not ret:
         continue

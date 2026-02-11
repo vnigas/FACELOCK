@@ -27,5 +27,3 @@ def winlock():
     password.bind('<Return>', CheckPassword) 
     root.mainloop()
 
-
-winlock()
