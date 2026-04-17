@@ -28,7 +28,7 @@ print(f"загружено {len(known_embeddings)}")
 cap = cv2.VideoCapture(0)
 
 while True:
-    time.sleep(10)
+    time.sleep(5)
     ret, frame = cap.read()
     if not ret:
         continue
