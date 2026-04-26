@@ -6,7 +6,7 @@ import time
 import os
 import numpy as np
 from scipy.spatial.distance import cosine
-from winlocker import winlock
+import ctypes
 import pickle
 
 
@@ -33,7 +33,7 @@ with open(DB_PATH, 'wb') as f:
 cap = cv2.VideoCapture(0)
 
 while True:
-    time.sleep(5)
+    time.sleep(1)
     ret, frame = cap.read()
     if not ret:
         continue
@@ -50,6 +50,6 @@ while True:
             print("Это тот же человек")
         else:
             print("Это другой человек")
-            winlock()
+            ctypes.windll.user32.LockWorkStation()
     except Exception as e:
         print(f"Ошибка распознавания: {e}")
