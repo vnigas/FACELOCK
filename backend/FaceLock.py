@@ -15,7 +15,7 @@ img_from_cam = "my_photo.jpg"
 THRESHOLD = 0.3
 
 
-DB_PATH = "embeddings.pkl"
+DB_PATH = "backend/embeddings.pkl"
 IMAGE_DIR = "data/know_face"
 
 base = []
