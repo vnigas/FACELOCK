@@ -8,10 +8,12 @@ import numpy as np
 from scipy.spatial.distance import cosine
 import ctypes
 import pickle
+import shutil
 
 
 img_from_cam = "my_photo.jpg"
 THRESHOLD = 0.3
+
 
 DB_PATH = "embeddings.pkl"
 IMAGE_DIR = "data/know_face"
@@ -51,5 +53,10 @@ while True:
         else:
             print("Это другой человек")
             ctypes.windll.user32.LockWorkStation()
+            source_file = 'my_photo.jpg'
+            destination_folder = 'block_users'
+            os.makedirs(destination_folder, exist_ok=True)
+            destination_path = os.path.join(destination_folder, os.path.basename(source_file))
+            shutil.move(source_file, destination_path)
     except Exception as e:
         print(f"Ошибка распознавания: {e}")
