@@ -3,4 +3,4 @@ venv/
 __pycache__/
 *.pyc
 data/
-my_photo.jpg
+block_users/my_photo.jpg
