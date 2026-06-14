@@ -3,12 +3,12 @@
 from deepface import DeepFace
 import cv2
 import time
+import datetime
 import os
 import numpy as np
 from scipy.spatial.distance import cosine
 import ctypes
 import pickle
-import shutil
 
 
 img_from_cam = "my_photo.jpg"
@@ -35,7 +35,7 @@ if not base_embeddings:
     os.makedirs(IMAGE_DIR, exist_ok=True)
 
     for file in os.listdir(IMAGE_DIR):
-        if file.lower().endswith(('.png', '.jpg', 'jpeg')):
+        if file.lower().endswith(('.png', '.jpg', '.jpeg')):
             path = os.path.join(IMAGE_DIR, file)
             try:
                 result = DeepFace.represent(img_path=path, model_name='Facenet512')
@@ -54,10 +54,6 @@ if not base_embeddings:
     exit()
 
 
-
-with open(DB_PATH, 'wb') as f:
-    pickle.dump(base_embeddings, f)
-
 cap = cv2.VideoCapture(0)
 
 while True:
@@ -65,24 +61,25 @@ while True:
     ret, frame = cap.read()
     if not ret:
         continue
-    cv2.imwrite(img_from_cam, frame)
     # Сравнение лиц
     try:
-        rep = DeepFace.represent(img_path=img_from_cam, enforce_detection=True)
-        cam_embedding = np.array(rep[0]["embedding"])
+        rep = DeepFace.represent(img_path=frame, enforce_detection=True)
+        cam_embedding = np.array(rep[0]["embedding"]).flatten()
 
         distance = [cosine(cam_embedding, known_emb) for known_emb in base_embeddings]
-
         min_distance = min(distance)
+        
         if min_distance < THRESHOLD:
             print("Это тот же человек")
         else:
             print("Это другой человек")
             ctypes.windll.user32.LockWorkStation()
-            source_file = 'my_photo.jpg'
+            
+            timestamp = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+            source_file = f'block_user_{timestamp}.jpg'
             destination_folder = 'block_users'
             os.makedirs(destination_folder, exist_ok=True)
-            destination_path = os.path.join(destination_folder, os.path.basename(source_file))
-            shutil.move(source_file, destination_path)
+            destination_path = os.path.join(destination_folder, source_file)
+            cv2.imwrite(destination_path, frame)
     except Exception as e:
         print(f"Ошибка распознавания: {e}")
