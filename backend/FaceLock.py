@@ -8,12 +8,8 @@ import numpy as np
 from scipy.spatial.distance import cosine
 import pickle
 from funct import lock_screen
+from config import THRESHOLD, DB_PATH, IMAGE_DIR, MODEL_NAME
 
-
-img_from_cam = "my_photo.jpg"
-THRESHOLD = 0.3
-DB_PATH = "FACELOCK/backend/embeddings.pkl"
-IMAGE_DIR = "data/known_face"
 
 base_embeddings = []
 # Проверка наличи существования базы embeddings
@@ -37,7 +33,7 @@ if not base_embeddings:
         if file.lower().endswith(('.png', '.jpg', '.jpeg')):
             path = os.path.join(IMAGE_DIR, file)
             try:
-                result = DeepFace.represent(img_path=path, model_name='Facenet512')
+                result = DeepFace.represent(img_path=path, model_name=MODEL_NAME)
                 embedding = np.array(result[0]['embedding']).flatten()
                 base_embeddings.append(embedding)
                 print(f' + Обработано: {file}')
@@ -62,23 +58,23 @@ while True:
         continue
     # Сравнение лиц
     try:
-        rep = DeepFace.represent(img_path=frame, enforce_detection=True, model_name='Facenet512')
+        rep = DeepFace.represent(img_path=frame, enforce_detection=True, model_name=MODEL_NAME)
         cam_embedding = np.array(rep[0]["embedding"]).flatten()
 
         distance = [cosine(cam_embedding, known_emb) for known_emb in base_embeddings]
         min_distance = min(distance)
         
         if min_distance < THRESHOLD:
-                print("Это тот же человек")
+            print("Это тот же человек")
         else:
-                print("Это другой человек")
-                lock_screen()
+            print("Это другой человек")
+            lock_screen()
 
-                timestamp = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-                source_file = f'block_user_{timestamp}.jpg'
-                destination_folder = 'block_users'
-                os.makedirs(destination_folder, exist_ok=True)
-                destination_path = os.path.join(destination_folder, source_file)
-                cv2.imwrite(destination_path, frame)
+            timestamp = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+            source_file = f'block_user_{timestamp}.jpg'
+            destination_folder = 'block_users'
+            os.makedirs(destination_folder, exist_ok=True)
+            destination_path = os.path.join(destination_folder, source_file)
+            cv2.imwrite(destination_path, frame)
     except Exception as e:
         print(f"Ошибка распознавания: {e}")

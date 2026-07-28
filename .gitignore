@@ -1,7 +1,5 @@
 venv/
-.venv/
-__pycache__/
-*.pyc
 data/
-block_users/my_photo.jpg
+block_users/
 my_photo.jpg
+sandbox/
