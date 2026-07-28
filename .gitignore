@@ -1,0 +1,7 @@
+venv/
+.venv/
+__pycache__/
+*.pyc
+data/
+block_users/my_photo.jpg
+my_photo.jpg

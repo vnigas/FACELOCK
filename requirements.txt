@@ -1,0 +1,7 @@
+deepface
+tensorflow
+tf-keras
+opencv-python
+numpy
+scipy
+flet
