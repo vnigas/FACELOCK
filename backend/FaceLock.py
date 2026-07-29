@@ -55,8 +55,8 @@ if not base_embeddings:
 cap = cv2.VideoCapture(0)
 
 while True:
-    d = Quartz.CGSessionCopyCurrentDictionary()
-    if d and d.get('CGSSessionScreenIsLocked', 0) == 1:
+    indicator_lock_screem = Quartz.CGSessionCopyCurrentDictionary()
+    if indicator_lock_screem and indicator_lock_screem.get('CGSSessionScreenIsLocked', 0) == 1:
         time.sleep(5)
         continue
     else:
