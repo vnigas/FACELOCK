@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 deepface
 tensorflow
 tf-keras
@@ -6,12 +5,3 @@ opencv-python
 numpy
 scipy
 flet
-=======
-deepface==0.0.93
-tensorflow==2.19.0
-tf-keras==2.19.0
-opencv-python==4.11.0.86
-numpy==1.26.4
-scipy==1.15.3
-flet==0.28.3
->>>>>>> 25fe5a9865e441410580a66efc99a5f106ca5933

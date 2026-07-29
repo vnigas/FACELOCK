@@ -4,11 +4,14 @@ import cv2
 import time
 import datetime
 import os
+import sys
 import numpy as np
 from scipy.spatial.distance import cosine
 import pickle
+import Quartz
 from funct import lock_screen
-from config import THRESHOLD, DB_PATH, IMAGE_DIR, MODEL_NAME
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+from config import THRESHOLD, DB_PATH, IMAGE_DIR, MODEL_NAME, NAME_FOLDER_BLOCK_USERS
 
 
 base_embeddings = []
@@ -52,29 +55,33 @@ if not base_embeddings:
 cap = cv2.VideoCapture(0)
 
 while True:
-    time.sleep(1)
-    ret, frame = cap.read()
-    if not ret:
+    d = Quartz.CGSessionCopyCurrentDictionary()
+    if d and d.get('CGSSessionScreenIsLocked', 0) == 1:
         continue
-    # Сравнение лиц
-    try:
-        rep = DeepFace.represent(img_path=frame, enforce_detection=True, model_name=MODEL_NAME)
-        cam_embedding = np.array(rep[0]["embedding"]).flatten()
+    else:
+        time.sleep(1)
+        ret, frame = cap.read()
+        if not ret:
+            continue
+        # Сравнение лиц
+        try:
+            rep = DeepFace.represent(img_path=frame, enforce_detection=True, model_name=MODEL_NAME)
+            cam_embedding = np.array(rep[0]["embedding"]).flatten()
 
-        distance = [cosine(cam_embedding, known_emb) for known_emb in base_embeddings]
-        min_distance = min(distance)
+            distance = [cosine(cam_embedding, known_emb) for known_emb in base_embeddings]
+            min_distance = min(distance)
         
-        if min_distance < THRESHOLD:
-            print("Это тот же человек")
-        else:
-            print("Это другой человек")
-            lock_screen()
+            if min_distance < THRESHOLD:
+                print("Это тот же человек")
+            else:
+                print("Это другой человек")
+                lock_screen()
 
-            timestamp = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-            source_file = f'block_user_{timestamp}.jpg'
-            destination_folder = 'block_users'
-            os.makedirs(destination_folder, exist_ok=True)
-            destination_path = os.path.join(destination_folder, source_file)
-            cv2.imwrite(destination_path, frame)
-    except Exception as e:
-        print(f"Ошибка распознавания: {e}")
+                timestamp = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+                source_file = f'block_user_{timestamp}.jpg'
+                destination_folder = NAME_FOLDER_BLOCK_USERS
+                os.makedirs(destination_folder, exist_ok=True)
+                destination_path = os.path.join(destination_folder, source_file)
+                cv2.imwrite(destination_path, frame)
+        except Exception as e:
+            print(f"Ошибка распознавания: {e}")
