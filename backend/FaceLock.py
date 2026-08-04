@@ -66,7 +66,7 @@ def main():
                 continue
             # Сравнение лиц
             try:
-                rep = DeepFace.represent(img=frame, enforce_detection=True, model_name=MODEL_NAME)
+                rep = DeepFace.represent(img_path=frame, enforce_detection=True, model_name=MODEL_NAME)
                 cam_embedding = np.array(rep[0]["embedding"]).flatten()
 
                 distance = [cosine(cam_embedding, known_emb) for known_emb in base_embeddings]
