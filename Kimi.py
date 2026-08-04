@@ -7,7 +7,7 @@ client = OpenAI(
 
 messages = [
     {"role": "system", "content": "You are an intelligent assistant, please reply concisely."},
-    {"role": "user", "content": "у тебя есть доступ к папку проекта?"},
+    {"role": "user", "content": ""},
 ]
 
 stream = client.chat.completions.create(
